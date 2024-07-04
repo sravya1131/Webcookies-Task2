@@ -1,0 +1,112 @@
+import java.util.Scanner;
+
+class Account {
+    private double balance;
+    private String accountNumber;
+
+    public Account(String accountNumber, double initialBalance) {
+        this.accountNumber = accountNumber;
+        this.balance = initialBalance;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            System.out.println("Successfully deposited $" + amount);
+        } else {
+            System.out.println("Invalid deposit amount.");
+        }
+    }
+
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            System.out.println("Successfully withdrew $" + amount);
+        } else {
+            System.out.println("Invalid withdraw amount or insufficient funds.");
+        }
+    }
+
+    public void transfer(Account toAccount, double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            toAccount.deposit(amount);
+            System.out.println("Successfully transferred $" + amount + " to account " + toAccount.getAccountNumber());
+        } else {
+            System.out.println("Invalid transfer amount or insufficient funds.");
+        }
+    }
+}
+
+public class ATM {
+    private static Scanner scanner = new Scanner(System.in);
+    private static Account account1 = new Account("123456", 5000.0);
+    private static Account account2 = new Account("789012", 3000.0);
+
+    public static void main(String[] args) {
+        int choice;
+        do {
+            displayMenu();
+            choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    checkBalance(account1);
+                    break;
+                case 2:
+                    depositMoney(account1);
+                    break;
+                case 3:
+                    withdrawMoney(account1);
+                    break;
+                case 4:
+                    transferFunds(account1, account2);
+                    break;
+                case 5:
+                    System.out.println("Thank you for using the ATM. Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 5);
+    }
+
+    private static void displayMenu() {
+        System.out.println("\nATM Interface:");
+        System.out.println("1. Check Balance");
+        System.out.println("2. Deposit Money");
+        System.out.println("3. Withdraw Money");
+        System.out.println("4. Transfer Funds");
+        System.out.println("5. Exit");
+        System.out.print("Enter your choice: ");
+    }
+
+    private static void checkBalance(Account account) {
+        System.out.println("Your current balance is $" + account.getBalance());
+    }
+
+    private static void depositMoney(Account account) {
+        System.out.print("Enter the amount to deposit: ");
+        double amount = scanner.nextDouble();
+        account.deposit(amount);
+    }
+
+    private static void withdrawMoney(Account account) {
+        System.out.print("Enter the amount to withdraw: ");
+        double amount = scanner.nextDouble();
+        account.withdraw(amount);
+    }
+
+    private static void transferFunds(Account fromAccount, Account toAccount) {
+        System.out.print("Enter the amount to transfer: ");
+        double amount = scanner.nextDouble();
+        fromAccount.transfer(toAccount, amount);
+    }
+}
